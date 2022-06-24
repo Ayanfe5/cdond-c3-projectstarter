@@ -43,9 +43,9 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cd frontend
-            npm install
-            npm run build
+             cd frontend
+             npm install
+             npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -60,9 +60,9 @@ jobs:
       - run:
           name: Back-end build
           command: |
-            cd backend
-            npm install
-            npm run build
+             cd backend
+             npm install
+             npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -71,33 +71,60 @@ jobs:
     docker:
       # Docker image here
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+       - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: Run frontend test
+          command: |
+            cd frontend
+            npm install
+            npm run test
                 
   test-backend:
     docker:
       # Docker image here
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+     - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: Run backend test
+          command: |
+            cd backend
+            npm install
+            npm run test
             
   scan-frontend:
     docker:
       # Docker image here
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
-
+       - checkout
+      - restore_cache:
+          keys: [frontend-build]
+      - run:
+          name: scan frontend for security vulnerabilities
+          command: |
+            cd frontend
+            npm install
+            npm audit fix --audit-level=critical --force
   scan-backend:
     docker:
       # Docker image here
     steps:
-      # Checkout code from git
-      # Restore from cache
-      # Your job code here
+      - checkout
+      - restore_cache:
+          keys: [backend-build]
+      - run:
+          name: scan backend for security vulnerabilities
+          command: |
+            cd backend
+            npm install
+            npm audit fix --audit-level=critical --force
+      - slack/notify:
+          channel: C03K89TRV4Z
+          event: fail
+          template: basic_fail_1
 
   deploy-infrastructure:
     docker:
