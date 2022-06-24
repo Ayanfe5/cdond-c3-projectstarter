@@ -1,6 +1,4 @@
 version: 2.1
-orbs:
-  slack: circleci/slack@4.10.1
 
 commands:
   destroy-environment:
@@ -126,10 +124,6 @@ jobs:
             cd backend
             npm install
             npm audit fix --audit-level=critical --force
-      - slack/notify:
-          channel: U03FFGNHZRP
-          event: fail
-          template: basic_fail_1
 
   deploy-infrastructure:
     docker:
