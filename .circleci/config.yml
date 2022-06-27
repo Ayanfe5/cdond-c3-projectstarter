@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@4.1
+  slack: circleci/slack@4.10.1
 
 commands:
   destroy-environment:
@@ -127,7 +127,7 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
       - slack/notify:
-          channel: A03M1TDFAP5
+          channel: C03DAJYL3SM
           event: fail
           template: basic_fail_1
 
@@ -456,9 +456,11 @@ workflows:
       - test-backend:
           requires: [build-backend]
       - scan-frontend:
-          requires: [scan-frontend]
+          requires: [build-frontend]
       - scan-backend:
-          requires: [scan-backend]
+          context:
+            - slack-secrets
+          requires: [build-backend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
