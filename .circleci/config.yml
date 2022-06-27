@@ -458,9 +458,9 @@ workflows:
       - scan-frontend:
           requires: [build-frontend]
       - scan-backend:
-        - Slacksend-notification:
-           notify:
-             context: slack-secrets
+          Slacksend-notification:
+      -notify:
+            context: slack-secrets
           requires: [build-backend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
