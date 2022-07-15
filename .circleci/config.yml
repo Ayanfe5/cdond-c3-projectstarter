@@ -175,26 +175,40 @@ jobs:
 
   configure-infrastructure:
     docker:
+      # Docker image here that supports Ansible
       - image: python:3.7-alpine3.11
     steps:
+      # Checkout code from git
       - checkout
+      # Add SSH server to the image
+      - run: 
+          name: Add SSH
+          command: |
+            apk add --update openssh-client git
+      # Add ssh keys with fingerprint
       - add_ssh_keys:
           fingerprints: ["d6:46:1b:af:a0:08:7a:51:47:dd:0b:10:c3:db:2e:f6"]
+      # attach workspace
       - attach_workspace:
           at: ~/
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip ansible
+            # Your code here
+            apk add --update ansible
             pip install awscli
+            # exit 1
       - run:
           name: Configure server
           command: |
+            # Your code here
             cd .circleci/ansible
-            ansible-playbook -i inventory.txt configure-server.yml
+            ansible-playbook configure-server.yml -i inventory.txt
+            # exit 1
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          ID: ${CIRCLE_WORKFLOW_ID:0:7}
+
 
   # Deploy phase
   run-migrations:
