@@ -179,7 +179,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["d6:46:1b:af:a0:08:7a:51:47:dd:0b:10:c3:db:2e:f6"]
+          fingerprints: ["fd:62:1d:dc:00:70:08:3b:cc:39:b1:b6:b5:d1:e5:39"]
       - attach_workspace:
           at: ~/
       - run:
@@ -195,7 +195,7 @@ jobs:
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-          
+
   # Deploy phase
   run-migrations:
     docker:
