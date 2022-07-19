@@ -206,11 +206,6 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
-          name: Install dependencies
-          command: |
-            apk add --update nodejs npm curl
-            pip install awscli
-      - run:
           name: Run migrations
           command: |
             cd backend
