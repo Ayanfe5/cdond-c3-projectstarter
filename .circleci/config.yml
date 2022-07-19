@@ -206,6 +206,11 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - run:
+          name: Install dependencies
+          command: |
+            apk add --update nodejs npm curl
+            pip install awscli
+      - run:
           name: Run migrations
           command: |
             cd backend
@@ -218,7 +223,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/WWfgjGi5gTfGWpnBDHzBD9/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+              curl -k https://kvdb.io/WWfgjGi5gTfGWpnBDHzBD9/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
      # Here's where you will add some code to rollback on failure
       - revert-migrations:
