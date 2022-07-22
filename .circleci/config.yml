@@ -215,7 +215,7 @@ jobs:
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
-      - image: python:3.7-alpine3.16
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache:
@@ -371,10 +371,10 @@ jobs:
             else
               return 1
             fi
-    #  - destroy-environment:
-       #    workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7} 
       - revert-migrations:
-           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   cloudfront-update:
     docker:
