@@ -374,33 +374,32 @@ jobs:
 
   cloudfront-update:
     docker:
-      - image: python:3.7-alpine3.11
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
     steps:
+      # Checkout code from git
       - checkout
       - run:
           name: Install dependencies
           command: |
-            apk add --update curl
-            pip install awscli
+            # your code here
+            yum install -y tar gzip curl
+            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+            yum install -y nodejs
       - run:
           name: Update cloudfront distribution
           command: |
-            # Get old workflow id
-            export OldWorkflowID=$(aws cloudformation list-exports \
-            --query "Exports[?Name==\`WorkflowID\`].Value" \
-            --no-paginate --output text)
-            echo $OldWorkflowID > ~/project/.circleci/files/OldWorkflowID.txt
+            # your code here
+            # export OldWorkflowID=&(aws cloudformation list-exports --query "Exports[?Name==\`WorkflowID\`].Value" --no-paginate --output text)
+            # echo $OldWorkflowID >> ~/OldWorkflowID.txt
+            # cat ~/OldWorkflowID.txt
             aws cloudformation deploy \
-            --template-file .circleci/files/cloudfront.yml \
-            --stack-name InitialStack \
-            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-            --tags project=udapeople
-            echo OldWorkflowID=${OldWorkflowID}
-            echo Current WorkflowID: ${CIRCLE_WORKFLOW_ID:0:7}
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - project/.circleci/files/OldWorkflowID.txt
+              --template-file .circleci/files/cloudfront.yml \
+              --stack-name InitialStack \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople
+            # echo OldWorkflowID: "&{OldWorkflowID}"
+            # echo Current Workflow ID: "${CIRCLE_WORKFLOW_ID:0:7}"
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
